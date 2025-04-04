@@ -1,6 +1,9 @@
 package com.user.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 public class UserEntity {
@@ -11,6 +14,13 @@ public class UserEntity {
     private String username;
     private String password;
     private String imgUrl;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    @JsonIgnore
+    private Set<Role> roles;
 
     public Long getId() {
         return id;
@@ -49,4 +59,11 @@ public class UserEntity {
         this.imgUrl = imgUrl;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 }

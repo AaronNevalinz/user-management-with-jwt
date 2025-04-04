@@ -11,6 +11,10 @@ public class LoginResponseDto {
         this.password = password;
         this.token = token;
     }
+    public LoginResponseDto(String username, String token) {
+        this.username = username;
+        this.token = token;
+    }
 
     public String getUsername() {
         return username;
