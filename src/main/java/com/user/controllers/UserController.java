@@ -39,6 +39,31 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users/{id}")
+    public UserEntity getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try{
+            userService.deleteUserById(id);
+            response.put("status", 200);
+            response.put("message", "User deleted successfully");
+
+            return ResponseEntity.ok(response);
+        }catch (Exception e) {
+            response.put("status", 400);
+            response.put("message", e.getMessage());
+            return ResponseEntity.ok(response);
+        }
+    }
+
+
     @PutMapping("/upload-image/{id}")
     public ResponseEntity<Map<String, Object>> uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         Map<String, Object> response = new HashMap<>();
