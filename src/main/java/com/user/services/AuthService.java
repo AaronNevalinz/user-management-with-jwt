@@ -3,6 +3,7 @@ package com.user.services;
 import com.user.exceptions.ResourceNotFound;
 import com.user.model.Role;
 import com.user.model.UserEntity;
+import com.user.payload.LoginRequestDTO;
 import com.user.repository.RoleRepository;
 import com.user.repository.UserRepository;
 import com.user.utils.JwtUtil;
@@ -33,27 +34,32 @@ public class AuthService {
     }
 
     public String login(UserEntity user){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtUtils.generateTokenFromUsername(user.getUsername());
     }
 
-    public UserEntity register(UserEntity user){
+    public UserEntity register(LoginRequestDTO user){
         if(userRepository.existsByUsername(user.getUsername())){
             throw new ResourceNotFound("User with username " + user.getUsername() + " already exists");
         }
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName("ROLE_USER").get();
+        Role userRole;
+
+        if(userRepository.count() == 0){
+            userRole = roleRepository.findByName("ROLE_ADMIN");
+            roles.add(roleRepository.findByName("ROLE_ADMIN"));
+        } else {
+            userRole = roleRepository.findByName("ROLE_"+user.getRole());
+            roles.add(roleRepository.findByName(userRole.getName()));
+        }
         roles.add(userRole);
         userEntity.setRoles(roles);
 
         return userRepository.save(userEntity);
     }
-
-//    public String logout(){
-//
-//    }
 }

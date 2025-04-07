@@ -19,7 +19,7 @@ public class UserEntity {
                 joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
                 inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
-    @JsonIgnore
+//    @JsonIgnore
     private Set<Role> roles;
 
     public Long getId() {

@@ -1,6 +1,7 @@
 package com.user.controllers;
 
 import com.user.model.UserEntity;
+import com.user.payload.LoginRequestDTO;
 import com.user.payload.LoginResponseDto;
 import com.user.services.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping(value = {"/register", "/signup"})
-    public ResponseEntity<UserEntity> register(@RequestBody UserEntity user) {
+    public ResponseEntity<UserEntity> register(@RequestBody LoginRequestDTO user) {
         UserEntity registerUser = authService.register(user);
         return ResponseEntity.ok(registerUser);
     }

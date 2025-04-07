@@ -48,8 +48,8 @@ public class AuthTokenFilter extends OncePerRequestFilter { // Extending with th
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
-
     }
+
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -57,4 +57,5 @@ public class AuthTokenFilter extends OncePerRequestFilter { // Extending with th
         }
         return null;
     }
+
 }
